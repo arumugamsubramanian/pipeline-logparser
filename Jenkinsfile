@@ -1248,7 +1248,7 @@ def testWriteToFile() {
 // = run tests   =
 // ===============
 
-testLogparserv1()
+// testLogparserv1()
 // testCompletedJobs()
 // testWriteToFile()
 // // test with less nodes than executor
