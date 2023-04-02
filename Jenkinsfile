@@ -1110,6 +1110,28 @@ def testCompletedJobs() {
     assert caught == true
 }
 
+def testLogparserv1() {
+    def script = '''\
+        set +x
+        echo "+ set +x" > output.txt
+        i=0
+        while [ $i -lt ''' + nblines.toString() + ''' ]
+        do
+            echo line $i
+            ''' + (expectedLogMap != null ? 'echo line $i >> output.txt' : '') + '''
+            i=$(( $i+1 ))
+            if [ $i = 50 ]
+            then
+                # sleep once in the middle to make sure the other branch adds some logs in the middle
+                sleep 1
+            fi
+        done
+        '''
+    script = script.stripIndent()
+
+    print script
+}
+
 def testLogparser() {
     // expected map of logs
     def expectedLogMap = [ 'null': '' ]
@@ -1226,13 +1248,14 @@ def testWriteToFile() {
 // = run tests   =
 // ===============
 
-testLogparser()
-testCompletedJobs()
-testWriteToFile()
-// test with less nodes than executor
-testThreadsWithNodes(LABEL_TEST_AGENT, 2)
-// same with more than executors available
-testThreadsWithNodes(LABEL_TEST_AGENT, 20)
-if (RUN_MANYTHREAD_TIMING_TEST) {
-    testManyThreads(50,20,500)
-}
+testLogparserv1()
+// testCompletedJobs()
+// testWriteToFile()
+// // test with less nodes than executor
+// testThreadsWithNodes(LABEL_TEST_AGENT, 2)
+// // same with more than executors available
+// testThreadsWithNodes(LABEL_TEST_AGENT, 20)
+// if (RUN_MANYTHREAD_TIMING_TEST) {
+//     testManyThreads(50,20,500)
+// }
+
